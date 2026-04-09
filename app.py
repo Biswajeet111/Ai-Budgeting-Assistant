@@ -99,20 +99,44 @@ elif choice == "➕ Add Expense":
 
 elif choice == "📋 View Expenses":
 
+    import pandas as pd
+
     st.subheader("Expense List")
 
     expenses = fetch_expenses()
 
     if expenses:
 
-        st.dataframe(
+        df = pd.DataFrame(
             expenses,
+            columns=[
+                "ID",
+                "Amount",
+                "Category",
+                "Description",
+                "Date"
+            ]
+        )
+
+        st.dataframe(
+            df,
             use_container_width=True
         )
 
+        # Expense analysis
         analysis = analyze_expenses(expenses)
 
         st.info(analysis)
+
+        # 📥 Export CSV Feature
+        csv = df.to_csv(index=False).encode("utf-8")
+
+        st.download_button(
+            label="📥 Download Expenses as CSV",
+            data=csv,
+            file_name="expenses.csv",
+            mime="text/csv"
+        )
 
     else:
         st.warning("No expenses found.")
