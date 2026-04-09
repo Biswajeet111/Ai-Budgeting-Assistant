@@ -1,50 +1,30 @@
-def calculate_budget(income):
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+EXCHANGE_API_KEY = os.getenv("EXCHANGE_API_KEY")
+
+
+def convert_currency(amount, from_currency="INR", to_currency="USD"):
     """
-    Apply 50-30-20 budgeting rule.
-    """
-
-    needs = income * 0.5
-    wants = income * 0.3
-    savings = income * 0.2
-
-    return {
-        "Needs": round(needs, 2),
-        "Wants": round(wants, 2),
-        "Savings": round(savings, 2)
-    }
-
-
-def analyze_expenses(expenses):
-    """
-    Analyze total expenses.
+    Convert currency using ExchangeRate API.
     """
 
-    total = sum([exp[1] for exp in expenses])
+    try:
+        url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/pair/{from_currency}/{to_currency}/{amount}"
 
-    if total == 0:
-        return "No expenses recorded yet."
+        response = requests.get(url)
 
-    if total > 20000:
-        return "Your spending is high. Try reducing non-essential expenses."
+        data = response.json()
 
-    elif total > 10000:
-        return "Your spending is moderate. Keep tracking regularly."
+        if data["result"] == "success":
+            converted_amount = data["conversion_result"]
+            return round(converted_amount, 2)
 
-    else:
-        return "Good job managing expenses!"
+        else:
+            return "Currency conversion failed."
 
-
-def suggest_savings(income, total_expense):
-    """
-    Suggest saving strategy.
-    """
-
-    remaining = income - total_expense
-
-    if remaining <= 0:
-        return "You are overspending. Reduce unnecessary purchases."
-
-    if remaining < income * 0.2:
-        return "Try increasing savings to at least 20% of income."
-
-    return "Your savings look good. Keep it up!"
+    except Exception as e:
+        return f"Error: {str(e)}"
