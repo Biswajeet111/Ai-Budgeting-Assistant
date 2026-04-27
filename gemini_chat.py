@@ -11,7 +11,7 @@ genai.configure(
 )
 
 # Initialize the Gemini model. 
-# We use 'gemini-2.5-flash' for fast and efficient responses.
+# We use 'gemini-2.5-flash' as requested.
 model = genai.GenerativeModel(
     model_name="gemini-2.5-flash"
 )
@@ -34,7 +34,8 @@ def get_ai_response(user_input, chat_history=None, system_instruction=None):
         # Prepare messages for chat history
         messages = []
         if chat_history:
-            for role, msg in chat_history:
+            # Limit history to the last 4 messages to save tokens/quota
+            for role, msg in chat_history[-4:]:
                 msg_role = "user" if role == "User" else "model"
                 messages.append({"role": msg_role, "parts": [msg]})
 
@@ -47,7 +48,7 @@ def get_ai_response(user_input, chat_history=None, system_instruction=None):
             generation_config={
                 "temperature": 0.4,
                 "top_p": 0.9,
-                "max_output_tokens": 2048 # Increased to prevent truncation
+                "max_output_tokens": 1000 # Increased slightly to prevent cut-offs while staying under quota
             }
         )
 
