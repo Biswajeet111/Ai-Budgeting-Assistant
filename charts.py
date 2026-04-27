@@ -1,76 +1,80 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-
+import altair as alt
 
 def create_pie_chart(expenses):
     """
-    Create pie chart based on category spending.
+    Generates an interactive pie chart (donut style) showing the distribution 
+    of expenses across different categories using Altair.
+    
+    Args:
+        expenses (list): A list of tuples containing expense data.
+        
+    Returns:
+        altair.Chart: An Altair donut chart object.
     """
-
     if not expenses:
         return None
 
+    # Load data into DataFrame
     df = pd.DataFrame(
         expenses,
-        columns=[
-            "id",
-            "amount",
-            "category",
-            "description",
-            "date"
-        ]
+        columns=["id", "amount", "category", "description", "date"]
     )
 
-    # Group by category
-    category_totals = df.groupby("category")["amount"].sum()
+    # Group by category and sum the amounts
+    category_totals = df.groupby("category", as_index=False)["amount"].sum()
 
-    fig, ax = plt.subplots()
+    # Create the Altair donut chart
+    chart = alt.Chart(category_totals).mark_arc(innerRadius=50).encode(
+        theta=alt.Theta(field="amount", type="quantitative"),
+        color=alt.Color(field="category", type="nominal", scale=alt.Scale(scheme='category20b')),
+        tooltip=[alt.Tooltip(field="category", type="nominal"), alt.Tooltip(field="amount", type="quantitative", format=",.2f")]
+    ).properties(
+        title="Expense Distribution by Category",
+        width=400,
+        height=400
+    ).interactive()
 
-    ax.pie(
-        category_totals,
-        labels=category_totals.index,
-        autopct="%1.1f%%"
-    )
-
-    ax.set_title("Expense Distribution by Category")
-
-    return fig
-
+    return chart
 
 def create_bar_chart(expenses):
     """
-    Create monthly expense bar chart.
+    Generates an interactive bar chart showing monthly expense totals using Altair.
+    
+    Args:
+        expenses (list): A list of tuples containing expense data.
+        
+    Returns:
+        altair.Chart: An Altair bar chart object.
     """
-
     if not expenses:
         return None
 
+    # Load data into DataFrame
     df = pd.DataFrame(
         expenses,
-        columns=[
-            "id",
-            "amount",
-            "category",
-            "description",
-            "date"
-        ]
+        columns=["id", "amount", "category", "description", "date"]
     )
 
-    # Convert date column
+    # Convert date strings to datetime objects for time-based operations
     df["date"] = pd.to_datetime(df["date"])
 
-    # Extract month
-    df["month"] = df["date"].dt.strftime("%Y-%m")
+    # Format the date to Year-Month (e.g., 2024-01)
+    df["Month"] = df["date"].dt.strftime("%b %Y")
 
-    monthly_totals = df.groupby("month")["amount"].sum()
+    # Group by month and sum the amounts
+    monthly_totals = df.groupby("Month", as_index=False)["amount"].sum()
 
-    fig, ax = plt.subplots()
+    # Create the Altair bar chart
+    chart = alt.Chart(monthly_totals).mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3).encode(
+        x=alt.X(field="Month", type="nominal", sort=None, title="Month"),
+        y=alt.Y(field="amount", type="quantitative", title="Total Spent (₹)"),
+        color=alt.value("#636EFA"),
+        tooltip=[alt.Tooltip(field="Month", type="nominal"), alt.Tooltip(field="amount", type="quantitative", format=",.2f")]
+    ).properties(
+        title="Monthly Expense Trends",
+        width=600,
+        height=400
+    ).interactive()
 
-    monthly_totals.plot(
-        kind="bar",
-        ax=ax
-    )
-
-    ax.set_title("Monthly Expenses")
-
-    return fig
+    return chart
