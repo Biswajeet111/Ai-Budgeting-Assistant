@@ -2,7 +2,7 @@
 
 FinAI is a premium, personal finance management tool built with **Streamlit** and powered by **Google's Gemini 2.5 Flash AI**. It combines traditional expense tracking with intelligent AI insights to help you master your finances.
 
-![Dashboard Preview](https://img.icons8.com/color/144/000000/finance.png)
+![Dashboard Preview](screenshots/DashBoard.png)
 
 ## 🚀 Key Features
 
