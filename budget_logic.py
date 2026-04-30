@@ -1,7 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
-
+import streamlit as st
 # Load environment variables (like API keys) from a .env file
 load_dotenv()
 
