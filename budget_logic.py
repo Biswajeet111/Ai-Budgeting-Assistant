@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Fetch the Exchange Rate API key from environment variables
-EXCHANGE_API_KEY = os.getenv("EXCHANGE_API_KEY")
+EXCHANGE_API_KEY = st.secrets["EXCHANGE_API_KEY"]
 
 
 def calculate_budget(income):
