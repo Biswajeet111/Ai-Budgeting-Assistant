@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from database import create_table, add_expense, fetch_expenses, delete_expense, clear_all_expenses
 from budget_logic import calculate_budget, analyze_expenses, convert_currency
-from gemini_chat import get_ai_response
+from groq_chat import get_ai_response
 from charts import create_pie_chart, create_bar_chart
 from prompts import SYSTEM_PROMPT, EXAMPLE_PROMPTS
 
@@ -55,12 +55,12 @@ if choice == "🏠 Dashboard":
     with col1:
         st.markdown("""
         ### Welcome to FinAI Assistant! 🚀
-        This project is a powerful, Gemini-powered financial tool designed to help you take control of your money. 
+        This project is a powerful, Groq-powered financial tool designed to help you take control of your money. 
         Whether you're tracking daily coffee runs or planning for long-term savings, FinAI has you covered.
 
         #### ✨ Core Features:
         - **Intelligent Tracking**: Easily record and categorize every expense.
-        - **AI Financial Coach**: Chat with our Gemini-powered bot for expert advice.
+        - **AI Financial Coach**: Chat with our Groq-powered bot for expert advice.
         - **Dynamic Insights**: Interactive charts showing exactly where your money goes.
         - **Smart Planning**: Auto-calculate budgets using the 50-30-20 rule.
         - **Global Ready**: Real-time currency conversion for international travelers.
@@ -84,7 +84,7 @@ if choice == "🏠 Dashboard":
     st.subheader("🛠️ Technology Stack")
     t1, t2, t3, t4 = st.columns(4)
     t1.code("Python / Streamlit")
-    t2.code("Google Gemini AI")
+    t2.code("Groq AI")
     t3.code("SQLite3 Database")
     t4.code("Altair Visuals")
 

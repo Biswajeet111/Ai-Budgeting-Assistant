@@ -1,4 +1,4 @@
-# System Prompt for Gemini
+# System Prompt for Groq
 
 SYSTEM_PROMPT = """
 You are an expert Financial Budgeting Assistant.
